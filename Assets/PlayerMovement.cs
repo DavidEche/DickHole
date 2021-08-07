@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
     RaycastHit groundhit;
     void jump()
     {
-        Debug.DrawRay(transform.position, Vector3.down * 1.3f, Color.blue,1);
+        Debug.DrawRay(transform.position, Vector3.down * 1.3f, Color.blue,3);
         //grounded
         //if (Physics.Raycast(transform.position, Vector3.down*1.3f, out groundhit))
         //{
