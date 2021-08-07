@@ -22,11 +22,12 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
+        jump();
     }
     void FixedUpdate()
     {
         rb.velocity = new Vector2(horizontal * runSpeed * Time.deltaTime, rb.velocity.y);
-        jump();
+        
     }
 
 
@@ -37,30 +38,25 @@ public class PlayerMovement : MonoBehaviour
     RaycastHit groundhit;
     void jump()
     {
-        Debug.DrawRay(transform.position, Vector3.down, Color.blue,1);
+        Debug.DrawRay(transform.position, Vector3.down * 1.3f, Color.blue,1);
         //grounded
-        if (Physics.Raycast(transform.position, Vector3.down, out groundhit))
-        {
+        //if (Physics.Raycast(transform.position, Vector3.down*1.3f, out groundhit))
+        //{
 
-            if (groundhit.distance <= 1.1f)
-            {
-                print(groundhit.collider.name);
-                itsgrounded = true;
-                if (presedonce == false)
-                {
-                    jumpTimeCounter = jumpTime;
-                }
-            }
-            else
-            { itsgrounded = false; }
-        }
+        //    if (groundhit.distance <= 1.2f)
+        //    {
+        //        itsgrounded = true;
+        //    }
+        //    else
+        //    { itsgrounded = false; }
+        //}
         //keydown
         if (Input.GetKeyDown(KeyCode.W) && itsgrounded == true)
         {
-
             airtimecounter = airtime;
             jumpTimeCounter = jumpTime;
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            itsgrounded = false;
             stoppedJumping = false;
             presedonce = true;
         }
