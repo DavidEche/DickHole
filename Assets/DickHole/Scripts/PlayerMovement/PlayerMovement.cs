@@ -33,23 +33,18 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpForce, jumpTime, airtime;
     float jumpTimeCounter, airtimecounter;
-    bool presedonce;
     public bool itsgrounded, stoppedJumping;
     RaycastHit groundhit;
     void jump()
     {
         Debug.DrawRay(transform.position, Vector3.down * 1.3f, Color.blue,3);
-        //grounded
-        //if (Physics.Raycast(transform.position, Vector3.down*1.3f, out groundhit))
-        //{
+        Debug.DrawRay(transform.position, rb.velocity*0.5f, Color.red);
+        //grounded its treated on child floor colider element
 
-        //    if (groundhit.distance <= 1.2f)
-        //    {
-        //        itsgrounded = true;
-        //    }
-        //    else
-        //    { itsgrounded = false; }
-        //}
+        //due roof colition or end of acceleration, hold jump its not required anymore.
+        if (rb.velocity.y == 0)
+        {stoppedJumping = true;}
+
         //keydown
         if (Input.GetKeyDown(KeyCode.W) && itsgrounded == true)
         {
@@ -58,9 +53,7 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             itsgrounded = false;
             stoppedJumping = false;
-            presedonce = true;
         }
-
         if (Input.GetKey(KeyCode.W) && stoppedJumping == false)
         {
             if (jumpTimeCounter > 0)
@@ -83,14 +76,12 @@ public class PlayerMovement : MonoBehaviour
             airtimecounter = airtime;
             jumpTimeCounter = jumpTime;
             stoppedJumping = true;
-            presedonce = false;
         }
         if (Input.GetKey(KeyCode.W) == false)
         {
             airtimecounter = airtime;
             jumpTimeCounter = jumpTime;
             stoppedJumping = true;
-            presedonce = false;
         }
     }
 
