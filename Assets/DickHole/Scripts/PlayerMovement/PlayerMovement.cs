@@ -73,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
                 if (airtimecounter > 0)
                 {
                     //rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-                    rb.velocity = new Vector2(rb.velocity.x, jumpForce * ((airtimecounter / airtime) * 1.3f));
+                    rb.velocity = new Vector2(rb.velocity.x, jumpForce * ((airtimecounter / airtime)*1.3f));
                     airtimecounter -= Time.deltaTime;
                 }
             }

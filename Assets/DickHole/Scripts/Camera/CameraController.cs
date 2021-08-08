@@ -29,15 +29,16 @@ public class CameraController : MonoBehaviour
 
     void zoom()
     {
-        float newzoom = Mathf.Lerp(maxzoom, minzoom, GetGreatestDistance()/ zoomlimiter);
-        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, newzoom,Time.deltaTime);
+       float newzoom = Mathf.Lerp(maxzoom, minzoom, GetGreatestDistance()/ zoomlimiter);
+        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, newzoom, Time.deltaTime);
     }
 
 
     void move()
     {
+
         Vector3 centerpoint = findcenter();
-        Vector3 newposition = centerpoint + offset;
+        Vector3 newposition = centerpoint + offset + new Vector3(0,0,-GetGreatestDistance());
         transform.position = Vector3.SmoothDamp(transform.position, newposition, ref velocity, smoothtime);
     }
 
@@ -49,7 +50,7 @@ public class CameraController : MonoBehaviour
             bounds.Encapsulate(targets[i].position);
         }
 
-        return bounds.size.x;
+        return bounds.size.x+bounds.size.y;
     }
 
     Vector3 findcenter()
