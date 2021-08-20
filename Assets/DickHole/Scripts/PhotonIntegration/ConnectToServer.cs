@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
 
-public class ConnectToServer : MonoBehaviourPunCallbacks
+public class ConnectToServer : MonoBehaviourPunCallbacks, IMatchmakingCallbacks
 {
+
+    private byte maxPlayers = 2;
     public void Connect() {
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -18,15 +21,20 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("In Lobby");
-        JoinRoomOrCreatRoom();
+        JoinRoom();
     }
 
-    public void JoinRoomOrCreatRoom(){
-        PhotonNetwork.JoinRandomOrCreateRoom();
+    private void JoinRoom(){
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    void IMatchmakingCallbacks.OnJoinRandomFailed(short returnCode, string message){
+        PhotonNetwork.CreateRoom(null, new RoomOptions(){MaxPlayers = maxPlayers}, null);
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("In Room");
+        PhotonNetwork.LoadLevel("SampleScene2");
     }
+
 }
