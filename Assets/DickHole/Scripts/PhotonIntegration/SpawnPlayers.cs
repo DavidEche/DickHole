@@ -8,11 +8,13 @@ public class SpawnPlayers : MonoBehaviour
     public GameObject playerPrefab;
     public Vector3[] postSpawn;
 
+    public CameraController cameraController;
+
     private void Start() {
         if(PhotonNetwork.PlayerList.Length == 1){
-            PhotonNetwork.Instantiate(playerPrefab.name,postSpawn[0],Quaternion.identity);
+            cameraController.targets.Add(PhotonNetwork.Instantiate(playerPrefab.name,postSpawn[0],Quaternion.identity).transform);
         }else{
-            PhotonNetwork.Instantiate(playerPrefab.name,postSpawn[1],Quaternion.identity);
+            cameraController.targets.Add(PhotonNetwork.Instantiate(playerPrefab.name,postSpawn[1],Quaternion.identity).transform);
         }
     }
 }

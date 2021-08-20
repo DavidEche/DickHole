@@ -29,7 +29,12 @@ public class ConnectToServer : MonoBehaviourPunCallbacks, IMatchmakingCallbacks
     }
 
     void IMatchmakingCallbacks.OnJoinRandomFailed(short returnCode, string message){
-        Debug.Log("failConeect");
+        PhotonNetwork.CreateRoom(null, new RoomOptions(){MaxPlayers = maxPlayers}, null);
+    }
+
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.LoadLevel("SampleScene2");
     }
 
 }
