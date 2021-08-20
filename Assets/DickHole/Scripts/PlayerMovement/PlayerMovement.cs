@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -12,67 +11,49 @@ public class PlayerMovement : MonoBehaviour
 
     public float runSpeed = 350f;
 
-    PhotonView view;
-
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        view = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(view.IsMine){
-            horizontal = Input.GetAxisRaw("Horizontal");
-            vertical = Input.GetAxisRaw("Vertical");
-        }
+        horizontal = Input.GetAxisRaw("Horizontal");
+        vertical = Input.GetAxisRaw("Vertical");
+        jump();
     }
     void FixedUpdate()
     {
-        if(view.IsMine){
-            rb.velocity = new Vector2(horizontal * runSpeed * Time.deltaTime, rb.velocity.y);
-            jump();
-        }
+        rb.velocity = new Vector2(horizontal * runSpeed * Time.deltaTime, rb.velocity.y);
+        
     }
 
 
     public float jumpForce, jumpTime, airtime;
     float jumpTimeCounter, airtimecounter;
-    bool presedonce;
     public bool itsgrounded, stoppedJumping;
     RaycastHit groundhit;
     void jump()
     {
-        Debug.DrawRay(transform.position, Vector3.down, Color.blue,1);
-        //grounded
-        if (Physics.Raycast(transform.position, Vector3.down, out groundhit))
-        {
+        Debug.DrawRay(transform.position, Vector3.down * 1.3f, Color.blue,3);
+        Debug.DrawRay(transform.position, rb.velocity*0.5f, Color.red);
+        //grounded its treated on child floor colider element
 
-            if (groundhit.distance <= 1.1f)
-            {
-                print(groundhit.collider.name);
-                itsgrounded = true;
-                if (presedonce == false)
-                {
-                    jumpTimeCounter = jumpTime;
-                }
-            }
-            else
-            { itsgrounded = false; }
-        }
+        //due roof colition or end of acceleration, hold jump its not required anymore.
+        if (rb.velocity.y == 0)
+        {stoppedJumping = true;}
+
         //keydown
         if (Input.GetKeyDown(KeyCode.W) && itsgrounded == true)
         {
-
             airtimecounter = airtime;
             jumpTimeCounter = jumpTime;
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            itsgrounded = false;
             stoppedJumping = false;
-            presedonce = true;
         }
-
         if (Input.GetKey(KeyCode.W) && stoppedJumping == false)
         {
             if (jumpTimeCounter > 0)
@@ -85,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
                 if (airtimecounter > 0)
                 {
                     //rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-                    rb.velocity = new Vector2(rb.velocity.x, jumpForce * ((airtimecounter / airtime) * 1.3f));
+                    rb.velocity = new Vector2(rb.velocity.x, jumpForce * ((airtimecounter / airtime)*1.3f));
                     airtimecounter -= Time.deltaTime;
                 }
             }
@@ -95,14 +76,12 @@ public class PlayerMovement : MonoBehaviour
             airtimecounter = airtime;
             jumpTimeCounter = jumpTime;
             stoppedJumping = true;
-            presedonce = false;
         }
         if (Input.GetKey(KeyCode.W) == false)
         {
             airtimecounter = airtime;
             jumpTimeCounter = jumpTime;
             stoppedJumping = true;
-            presedonce = false;
         }
     }
 
